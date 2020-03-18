@@ -131,14 +131,14 @@ where T: Scalar
   }
 }
 
-// impl<T> AddAssign<T> for Tensor<T>
-// where T: Scalar
-// {
-//   fn add_assign(&mut self, rhs: T)
-//   {
-//     for this in self.data.iter_mut() { *this+=rhs; }
-//   }
-// }
+impl<T,const N: usize> AddAssign<T> for Tensor<T,N>
+where T: Scalar
+{
+  fn add_assign(&mut self, rhs: T)
+  {
+    for this in self.data.iter_mut() { *this+=rhs; }
+  }
+}
 
 // impl<T> Add<T> for Tensor<T>
 // where T: Scalar
@@ -294,23 +294,23 @@ mod tensor_tests
     assert!(t1[[1,2]]==1.1+9.7+9.7);
   }
 
-  // #[test]
-  // fn tensor_test_add_assign_scalar()
-  // {
-  //   let mut t: Tensor<f64>=Tensor::<f64>::new(4);
-  //   t[0]=3.14;
-  //   t[1]=1.618;
-  //   t[2]=2.71;
-  //   t[3]=1.414;
+  #[test]
+  fn tensor_test_add_assign_scalar()
+  {
+    let mut t: Tensor<f64,1>=Tensor::<f64,1>::new([4]);
+    t[[0]]=3.14;
+    t[[1]]=1.618;
+    t[[2]]=2.71;
+    t[[3]]=1.414;
 
-  //   let s: f64=1.202;
+    let s: f64=1.202;
 
-  //   t+=s;
-  //   assert!(t[0]==3.14+s);
-  //   assert!(t[1]==1.618+s);
-  //   assert!(t[2]==2.71+s);
-  //   assert!(t[3]==1.414+s);
-  // }
+    t+=s;
+    assert!(t[[0]]==3.14+s);
+    assert!(t[[1]]==1.618+s);
+    assert!(t[[2]]==2.71+s);
+    assert!(t[[3]]==1.414+s);
+  }
 
   // #[test]
   // fn tensor_test_add_tensor()
