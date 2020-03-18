@@ -124,8 +124,6 @@ where T: Scalar
 {
   fn add_assign(&mut self, rhs: Self)
   {
-    // currently unneeded, maybe not, later...
-    // if self.dim.len()!=rhs.dim.len() { panic!("Tensors must be of the same dimension to add them."); }
     for (dim1,dim2) in self.dim.iter().zip(rhs.dim.iter() )
     {
       if dim1!=dim2 { panic!("All dimensions of two tensors must be of the same size to add them.")}
@@ -143,8 +141,6 @@ where T: Scalar
 {
   fn add_assign(&mut self, rhs: &Self)
   {
-    // currently unneeded, maybe not, later...
-    // if self.dim.len()!=rhs.dim.len() { panic!("Tensors must be of the same dimension to add them."); }
     for (dim1,dim2) in self.dim.iter().zip(rhs.dim.iter() )
     {
       if dim1!=dim2 { panic!("All dimensions of two tensors must be of the same size to add them.")}
@@ -253,20 +249,9 @@ mod tensor_tests
     assert!(t[[0,2]]==2.718);
   }
 
-  // currently unneeded, maybe not, later...
-  // #[test]
-  // #[should_panic(expected="Tensors must be of the same dimension to add them.")]
-  // fn tensor_test_add_assign_tensor_1()
-  // {
-  //   let mut t1: Tensor<f64,2>=Tensor::<f64,2>::new([2,3]);
-  //   let t2: Tensor<f64,1>=Tensor::<f64,1>::new([4]);
-
-  //   t1+=t2;
-  // }
-
   #[test]
   #[should_panic(expected="All dimensions of two tensors must be of the same size to add them.")]
-  fn tensor_test_add_assign_tensor_2()
+  fn tensor_test_add_assign_tensor_1()
   {
     let mut t1: Tensor<f64,1>=Tensor::<f64,1>::new([5]);
     let t2: Tensor<f64,1>=Tensor::<f64,1>::new([4]);
@@ -275,7 +260,7 @@ mod tensor_tests
   }
 
   #[test]
-  fn tensor_test_add_assign_tensor_3()
+  fn tensor_test_add_assign_tensor_2()
   {
     let mut t1: Tensor<f64,2>=Tensor::<f64,2>::new([2,3]);
     let mut t2: Tensor<f64,2>=Tensor::<f64,2>::new([2,3]);
