@@ -120,7 +120,7 @@ where T: Scalar
 {
   fn add_assign(&mut self, rhs: Self)
   {
-    for (dim1,dim2) in self.dim.iter().zip(rhs.dim.iter() )
+    for (dim1,dim2) in self.dim.iter().zip(rhs.dim.iter())
     {
       if dim1!=dim2 { panic!("All dimensions of two tensors must be of the same size to add them.")}
     }
