@@ -14,7 +14,7 @@ use std::ops::IndexMut;
 
 trait Scalar:
   // impl Copy means impl Clone
-  Copy + Default + AddAssign
+  Clone + Default + AddAssign
 {}
 
 impl Scalar for f64 {}
@@ -87,7 +87,7 @@ where T: Scalar
 
     for itr in 0..self.data.len()
     {
-      t.data[itr]=self.data[itr];
+      t.data[itr]=self.data[itr].clone();
     }
     t
   }
@@ -107,7 +107,7 @@ where T: Scalar
 
     for (this,other) in self.data.iter_mut().zip(rhs.data.iter())
     {
-      *this+=*other;
+      *this+=other.clone();
     }
   }
 }
@@ -126,7 +126,7 @@ where T: Scalar
 
     for (this,other) in self.data.iter_mut().zip(rhs.data.iter())
     {
-      *this+=*other;
+      *this+=other.clone();
     }
   }
 }
@@ -136,7 +136,7 @@ where T: Scalar
 {
   fn add_assign(&mut self, rhs: T)
   {
-    for this in self.data.iter_mut() { *this+=rhs; }
+    for this in self.data.iter_mut() { *this+=rhs.clone(); }
   }
 }
 
