@@ -140,27 +140,27 @@ where T: Scalar
   }
 }
 
-// impl<T> Add<T> for Tensor<T>
-// where T: Scalar
-// {
-//   type Output=Self;
-//   fn add(mut self, rhs: T) -> Self::Output
-//   {
-//     self+=rhs;
-//     return self;
-//   }
-// }
+impl<T,const N: usize> Add<T> for Tensor<T,N>
+where T: Scalar
+{
+  type Output=Self;
+  fn add(mut self, rhs: T) -> Self::Output
+  {
+    self+=rhs;
+    self
+  }
+}
 
-// impl<T> Add for Tensor<T>
-// where T: Scalar
-// {
-//   type Output=Self;
-//   fn add(mut self, rhs: Self) -> Self::Output
-//   {
-//     self+=rhs;
-//     self
-//   }
-// }
+impl<T,const N: usize> Add for Tensor<T,N>
+where T: Scalar
+{
+  type Output=Self;
+  fn add(mut self, rhs: Self) -> Self::Output
+  {
+    self+=rhs;
+    self
+  }
+}
 
 //
 // Tests
@@ -312,41 +312,41 @@ mod tensor_tests
     assert!(t[[3]]==1.414+s);
   }
 
-  // #[test]
-  // fn tensor_test_add_tensor()
-  // {
-  //   let mut t1: Tensor<f64>=Tensor::<f64>::new(3);
-  //   let mut t2: Tensor<f64>=Tensor::<f64>::new(3);
+  #[test]
+  fn tensor_test_add_tensor()
+  {
+    let mut t1: Tensor<f64,1>=Tensor::<f64,1>::new([3]);
+    let mut t2: Tensor<f64,1>=Tensor::<f64,1>::new([3]);
 
-  //   t1[0]=1.3;
-  //   t1[1]=2.2;
-  //   t1[2]=3.1;
+    t1[[0]]=1.3;
+    t1[[1]]=2.2;
+    t1[[2]]=3.1;
 
-  //   t2[0]=7.9;
-  //   t2[1]=8.8;
-  //   t2[2]=9.7;
+    t2[[0]]=7.9;
+    t2[[1]]=8.8;
+    t2[[2]]=9.7;
 
-  //   let t3: Tensor<f64>=t1.clone()+t2;
+    let t3: Tensor<f64,1>=t1.clone()+t2;
 
-  //   assert!(t3[0]==1.3+7.9);
-  //   assert!(t3[1]==2.2+8.8);
-  //   assert!(t3[2]==3.1+9.7);
-  // }
+    assert!(t3[[0]]==1.3+7.9);
+    assert!(t3[[1]]==2.2+8.8);
+    assert!(t3[[2]]==3.1+9.7);
+  }
 
-  // #[test]
-  // fn tensor_test_add_scalar()
-  // {
-  //   let mut t1: Tensor<f64>=Tensor::<f64>::new(3);
-  //   t1[0]=1.3;
-  //   t1[1]=2.2;
-  //   t1[2]=3.1;
+  #[test]
+  fn tensor_test_add_scalar()
+  {
+    let mut t1: Tensor<f64,1>=Tensor::<f64,1>::new([3]);
+    t1[[0]]=1.3;
+    t1[[1]]=2.2;
+    t1[[2]]=3.1;
 
-  //   let t2: Tensor<f64>=t1+3.14;
+    let t2: Tensor<f64,1>=t1+3.14;
 
-  //   assert!(t2[0]==1.3+3.14);
-  //   assert!(t2[1]==2.2+3.14);
-  //   assert!(t2[2]==3.1+3.14);
-  // }
+    assert!(t2[[0]]==1.3+3.14);
+    assert!(t2[[1]]==2.2+3.14);
+    assert!(t2[[2]]==3.1+3.14);
+  }
 
   #[test]
   fn tensor_test_clone()
