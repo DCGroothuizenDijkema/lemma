@@ -229,26 +229,42 @@ mod tensor_tests
     t1+=t2;
   }
 
-  // #[test]
-  // fn tensor_test_add_assign_tensor_3()
-  // {
-  //   let mut t1: Tensor<f64>=Tensor::<f64>::new(3);
-  //   let mut t2: Tensor<f64>=Tensor::<f64>::new(3);
+  #[test]
+  fn tensor_test_add_assign_tensor_3()
+  {
+    let mut t1: Tensor<f64,2>=Tensor::<f64,2>::new([2,3]);
+    let mut t2: Tensor<f64,2>=Tensor::<f64,2>::new([2,3]);
 
-  //   t1[0]=1.3;
-  //   t1[1]=2.2;
-  //   t1[2]=3.1;
+    t1[[0,0]]=1.3;
+    t1[[0,2]]=2.2;
+    t1[[1,1]]=3.1;
 
-  //   t2[0]=7.9;
-  //   t2[1]=8.8;
-  //   t2[2]=9.7;
+    t2[[0,1]]=7.9;
+    t2[[1,0]]=8.8;
+    t2[[1,2]]=9.7;
 
-  //   t1+=t2;
+    t1+=t2.clone();
 
-  //   assert!(t1[0]==1.3+7.9);
-  //   assert!(t1[1]==2.2+8.8);
-  //   assert!(t1[2]==3.1+9.7);
-  // }
+    assert!(t1[[0,0]]==1.3);
+    assert!(t1[[0,1]]==7.9);
+    assert!(t1[[0,2]]==2.2);
+    assert!(t1[[1,0]]==8.8);
+    assert!(t1[[1,1]]==3.1);
+    assert!(t1[[1,2]]==9.7);
+
+    t1[[0,1]]=1.1;
+    t1[[1,0]]=1.1;
+    t1[[1,2]]=1.1;
+
+    t1+=t2.clone();
+
+    assert!(t1[[0,0]]==1.3);
+    assert!(t1[[0,1]]==7.9+1.1);
+    assert!(t1[[0,2]]==2.2);
+    assert!(t1[[1,0]]==8.8+1.1);
+    assert!(t1[[1,1]]==3.1);
+    assert!(t1[[1,2]]==9.7+1.1);
+  }
 
   // #[test]
   // fn tensor_test_add_assign_scalar()
