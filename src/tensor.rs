@@ -189,6 +189,18 @@ where T: Scalar
   }
 }
 
+impl<T,const N: Idx> Add for &Tensor<T,N>
+where T: Scalar
+{
+  type Output=Tensor<T,N>;
+  fn add(self, rhs: Self) -> Self::Output
+  {
+    let mut t: Tensor<T,N>=self.clone();
+    t+=rhs;
+    t
+  }
+}
+
 //
 // Tests
 //
@@ -342,7 +354,7 @@ mod tensor_tests
     t2[1]=8.8;
     t2[2]=9.7;
 
-    let t3: Tensor<f64,1>=t1.clone()+t2;
+    let t3: Tensor<f64,1>=t1+t2;
 
     assert!(t3[0]==1.3+7.9);
     assert!(t3[1]==2.2+8.8);
