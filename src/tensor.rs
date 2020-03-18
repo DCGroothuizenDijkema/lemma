@@ -19,6 +19,26 @@ trait Scalar:
   Clone + Default + AddAssign
 {}
 
+trait Dimension<D>
+{
+  fn index(dim: D, ind: D) -> Idx;
+}
+
+impl<const N: usize> Dimension<Dim<N>> for Dim<N>
+{
+  fn index(dim: Dim<N>, ind: Dim<N>) -> Idx
+  {
+    ind.iter()
+      .enumerate()
+      .fold(0,|acc,d| {
+        let itr: usize=d.0+1;
+        let prod: usize=dim[itr..].iter()
+        .fold(1,|acc,d| acc*d);
+        acc+prod*d.1
+      })
+  }
+}
+
 impl Scalar for f64 {}
 impl Scalar for f32 {}
 
@@ -31,7 +51,7 @@ struct Tensor<T: Scalar, const N: usize>
 impl<T,const N: usize> Tensor<T,N>
 where T: Scalar
 {
-  fn new(dim: [usize; N]) -> Tensor<T,N>
+  fn new(dim: Dim<N>) -> Tensor<T,N>
   {
     let size: usize=dim.iter()
       .fold(1,|acc,d| acc*d);
@@ -40,11 +60,11 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> Index<[usize;N]> for Tensor<T,N>
+impl<T,const N: usize> Index<Dim<N>> for Tensor<T,N>
 where T: Scalar
 {
   type Output=T;
-  fn index(&self, index: [usize;N]) -> &Self::Output
+  fn index(&self, index: Dim<N>) -> &Self::Output
   {
     let ind: usize=index.iter()
       .enumerate()
@@ -58,17 +78,17 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> IndexMut<[usize;N]> for Tensor<T,N>
+impl<T,const N: usize> IndexMut<Dim<N>> for Tensor<T,N>
 where T: Scalar
 {
-  fn index_mut(&mut self, index: [usize;N]) -> &mut Self::Output
+  fn index_mut(&mut self, index: Dim<N>) -> &mut Self::Output
   {
     let ind: usize=index.iter()
       .enumerate()
       .fold(0,|acc,d| {
         let itr: usize=d.0+1;
         let prod: usize=self.dim[itr..].iter()
-        .fold(1,|acc,d| acc*d);
+          .fold(1,|acc,d| acc*d);
         acc+prod*d.1
       });
     &mut self.data[ind]
