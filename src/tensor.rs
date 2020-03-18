@@ -37,24 +37,46 @@ where T: Scalar
   }
 }
 
-// impl<T> Index<usize> for Tensor<T>
-// where T: Scalar
-// {
-//   type Output=T;
-//   fn index(&self, index: usize) -> &Self::Output
-//   {
-//     &self.data[index]
-//   }
-// }
+impl<T,const N: usize> Index<[usize;N]> for Tensor<T,N>
+where T: Scalar
+{
+  type Output=T;
+  fn index(&self, index: [usize;N]) -> &Self::Output
+  {
+    let nd: usize=self.dim.len();
+    let mut ind: usize=0;
+    for itr in 0..nd
+    {
+      let mut prod: usize=1;
+      for jtr in (itr+1)..nd
+      {
+        prod*=self.dim[jtr];
+      }
+      ind+=prod*index[itr]
+    }
+    &self.data[ind]
+  }
+}
 
-// impl<T> IndexMut<usize> for Tensor<T>
-// where T: Scalar
-// {
-//   fn index_mut(&mut self, index: usize) -> &mut Self::Output
-//   {
-//     &mut self.data[index]
-//   }
-// }
+impl<T,const N: usize> IndexMut<[usize;N]> for Tensor<T,N>
+where T: Scalar
+{
+  fn index_mut(&mut self, index: [usize;N]) -> &mut Self::Output
+  {
+    let nd: usize=self.dim.len();
+    let mut ind: usize=0;
+    for itr in 0..nd
+    {
+      let mut prod: usize=1;
+      for jtr in (itr+1)..nd
+      {
+        prod*=self.dim[jtr];
+      }
+      ind+=prod*index[itr]
+    }
+    &mut self.data[ind]
+  }
+}
 
 // impl<T,const N: usize> Clone for Tensor<T,N>
 // where T: Scalar
@@ -149,27 +171,41 @@ mod tensor_tests
     }
   }
 
-  // #[test]
-  // fn tensor_test_index()
-  // {
-  //   let t: Tensor<f64>=Tensor::<f64>::new(5);
-  //   for itr in 0..5
-  //   {
-  //     assert!(t[itr]==0f64);
-  //   }
-  // }
+  #[test]
+  fn tensor_test_index()
+  {
+    let t: Tensor<f64,3>=Tensor::<f64,3>::new([2,4,3]);
+    for itr in 0..2
+    {
+      for jtr in 0..4
+      {
+        for ktr in 0..3
+        {
+          assert!(t[[itr,jtr,ktr]]==0f64);
+        }
+      }
+    }
+  }
 
-  // #[test]
-  // fn tensor_test_index_mut()
-  // {
-  //   let mut t: Tensor<f64>=Tensor::<f64>::new(5);
-  //   t[1]=3.14;
-  //   assert!(t[1]==3.14);
-  //   t[4]=1.618;
-  //   assert!(t[4]==1.618);
-  //   t[0]=2.718;
-  //   assert!(t[0]==2.718);
-  // }
+  #[test]
+  fn tensor_test_index_mut()
+  {
+    let mut t: Tensor<f64,1>=Tensor::<f64,1>::new([5]);
+    t[[1]]=3.14;
+    assert!(t[[1]]==3.14);
+    t[[4]]=1.618;
+    assert!(t[[4]]==1.618);
+    t[[0]]=2.718;
+    assert!(t[[0]]==2.718);
+
+    let mut t: Tensor<f64,2>=Tensor::<f64,2>::new([2,4]);
+    t[[1,3]]=3.14;
+    assert!(t[[1,3]]==3.14);
+    t[[0,0]]=1.618;
+    assert!(t[[0,0]]==1.618);
+    t[[0,2]]=2.718;
+    assert!(t[[0,2]]==2.718);
+  }
 
   // // #[test]
   // // #[should_panic(expected="Tensors must be of the same dimension to add them.")]
