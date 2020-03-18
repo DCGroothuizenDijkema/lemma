@@ -25,7 +25,7 @@ trait Dimension<D>
   fn size(self) -> Idx;
 }
 
-impl<const N: usize> Dimension<Dim<N>> for Dim<N>
+impl<const N: Idx> Dimension<Dim<N>> for Dim<N>
 {
   fn index(self, ind: Dim<N>) -> Idx
   {
@@ -49,13 +49,13 @@ impl<const N: usize> Dimension<Dim<N>> for Dim<N>
 impl Scalar for f64 {}
 impl Scalar for f32 {}
 
-struct Tensor<T: Scalar, const N: usize>
+struct Tensor<T: Scalar, const N: Idx>
 {
   data: Box<[T]>,
   dim: Dim<N>,
 }
 
-impl<T,const N: usize> Tensor<T,N>
+impl<T,const N: Idx> Tensor<T,N>
 where T: Scalar
 {
   fn new(dim: Dim<N>) -> Tensor<T,N>
@@ -66,7 +66,7 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> Index<Dim<N>> for Tensor<T,N>
+impl<T,const N: Idx> Index<Dim<N>> for Tensor<T,N>
 where T: Scalar
 {
   type Output=T;
@@ -76,7 +76,7 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> IndexMut<Dim<N>> for Tensor<T,N>
+impl<T,const N: Idx> IndexMut<Dim<N>> for Tensor<T,N>
 where T: Scalar
 {
   fn index_mut(&mut self, ind: Dim<N>) -> &mut Self::Output
@@ -85,7 +85,7 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> Clone for Tensor<T,N>
+impl<T,const N: Idx> Clone for Tensor<T,N>
 where T: Scalar
 {
   fn clone(&self) -> Tensor<T,N>
@@ -100,7 +100,7 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> AddAssign for Tensor<T,N>
+impl<T,const N: Idx> AddAssign for Tensor<T,N>
 where T: Scalar
 {
   fn add_assign(&mut self, rhs: Self)
@@ -119,7 +119,7 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> AddAssign<&Tensor<T,N>> for Tensor<T,N>
+impl<T,const N: Idx> AddAssign<&Tensor<T,N>> for Tensor<T,N>
 where T: Scalar
 {
   fn add_assign(&mut self, rhs: &Self)
@@ -138,7 +138,7 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> AddAssign<T> for Tensor<T,N>
+impl<T,const N: Idx> AddAssign<T> for Tensor<T,N>
 where T: Scalar
 {
   fn add_assign(&mut self, rhs: T)
@@ -147,7 +147,7 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> Add<T> for Tensor<T,N>
+impl<T,const N: Idx> Add<T> for Tensor<T,N>
 where T: Scalar
 {
   type Output=Self;
@@ -158,7 +158,7 @@ where T: Scalar
   }
 }
 
-impl<T,const N: usize> Add for Tensor<T,N>
+impl<T,const N: Idx> Add for Tensor<T,N>
 where T: Scalar
 {
   type Output=Self;
