@@ -162,6 +162,15 @@ where T: Scalar
   }
 }
 
+impl<T,const N: Idx> AddAssign<&T> for Tensor<T,N>
+where T: Scalar
+{
+  fn add_assign(&mut self, rhs: &T)
+  {
+    for this in self.data.iter_mut() { *this+=rhs.clone(); }
+  }
+}
+
 impl<T,const N: Idx> Add<T> for Tensor<T,N>
 where T: Scalar
 {
