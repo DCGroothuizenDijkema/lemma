@@ -12,8 +12,10 @@ use std::ops::AddAssign;
 use std::ops::Index;
 use std::ops::IndexMut;
 
+type Idx=usize;
+type Dim<const N: Idx>=[Idx;N];
+
 trait Scalar:
-  // impl Copy means impl Clone
   Clone + Default + AddAssign
 {}
 
@@ -23,7 +25,7 @@ impl Scalar for f32 {}
 struct Tensor<T: Scalar, const N: usize>
 {
   data: Box<[T]>,
-  dim: [usize;N],
+  dim: Dim<N>,
 }
 
 impl<T,const N: usize> Tensor<T,N>
@@ -31,7 +33,8 @@ where T: Scalar
 {
   fn new(dim: [usize; N]) -> Tensor<T,N>
   {
-    let size: usize=dim.iter().fold(1,|a, &b| a*b);
+    let size: usize=dim.iter()
+      .fold(1,|acc,d| acc*d);
     let data: Box<[T]>=vec![T::default();size].into_boxed_slice();
     Tensor{data:data,dim:dim}
   }
