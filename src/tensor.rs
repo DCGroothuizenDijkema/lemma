@@ -34,7 +34,7 @@ impl<const N: usize> Dimension<Dim<N>> for Dim<N>
       .fold(0,|acc,d| {
         let itr: usize=d.0+1;
         let prod: usize=self[itr..].iter()
-        .fold(1,|acc,d| acc*d);
+          .fold(1,|acc,d| acc*d);
         acc+prod*d.1
       })
   }
