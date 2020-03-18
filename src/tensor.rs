@@ -110,11 +110,7 @@ where T: Scalar
   fn clone(&self) -> Tensor<T,N>
   {
     let mut t: Tensor<T,N>=Tensor::<T,N>::new(self.dim);
-
-    for itr in 0..self.data.len()
-    {
-      t.data[itr]=self.data[itr].clone();
-    }
+    t.data=self.data.clone();
     t
   }
 }
