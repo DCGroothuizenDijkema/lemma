@@ -112,6 +112,25 @@ where T: Scalar
   }
 }
 
+impl<T,const N: usize> AddAssign<&Tensor<T,N>> for Tensor<T,N>
+where T: Scalar
+{
+  fn add_assign(&mut self, rhs: &Self)
+  {
+    // currently unneeded, maybe not, later...
+    // if self.dim.len()!=rhs.dim.len() { panic!("Tensors must be of the same dimension to add them."); }
+    for (dim1,dim2) in self.dim.iter().zip(rhs.dim.iter() )
+    {
+      if dim1!=dim2 { panic!("All dimensions of two tensors must be of the same size to add them.")}
+    }
+
+    for (this,other) in self.data.iter_mut().zip(rhs.data.iter())
+    {
+      *this+=*other;
+    }
+  }
+}
+
 // impl<T> AddAssign<T> for Tensor<T>
 // where T: Scalar
 // {
@@ -256,7 +275,7 @@ mod tensor_tests
     t1[[1,0]]=1.1;
     t1[[1,2]]=1.1;
 
-    t1+=t2.clone();
+    t1+=&t2;
 
     assert!(t1[[0,0]]==1.3);
     assert!(t1[[0,1]]==7.9+1.1);
@@ -264,6 +283,15 @@ mod tensor_tests
     assert!(t1[[1,0]]==8.8+1.1);
     assert!(t1[[1,1]]==3.1);
     assert!(t1[[1,2]]==9.7+1.1);
+
+    t1+=&t2;
+
+    assert!(t1[[0,0]]==1.3);
+    assert!(t1[[0,1]]==1.1+7.9+7.9);
+    assert!(t1[[0,2]]==2.2);
+    assert!(t1[[1,0]]==1.1+8.8+8.8);
+    assert!(t1[[1,1]]==3.1);
+    assert!(t1[[1,2]]==1.1+9.7+9.7);
   }
 
   // #[test]
