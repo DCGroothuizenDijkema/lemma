@@ -201,6 +201,31 @@ where T: Scalar
   }
 }
 
+impl<T,const N: Idx> Add<Tensor<T,N>> for &Tensor<T,N>
+where T: Scalar
+{
+  type Output=Tensor<T,N>;
+  fn add(self, rhs: Tensor<T,N>) -> Self::Output
+  {
+    let mut t: Tensor<T,N>=self.clone();
+    t+=rhs;
+    t
+  }
+}
+
+impl<T,const N: Idx> Add<&Tensor<T,N>> for Tensor<T,N>
+where T: Scalar
+{
+  type Output=Tensor<T,N>;
+  fn add(self, rhs: &Self) -> Self::Output
+  {
+    let mut t: Tensor<T,N>=self.clone();
+    t+=rhs;
+    t
+  }
+}
+
+
 //
 // Tests
 //
