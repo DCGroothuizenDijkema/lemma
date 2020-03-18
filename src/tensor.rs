@@ -46,17 +46,14 @@ where T: Scalar
   type Output=T;
   fn index(&self, index: [usize;N]) -> &Self::Output
   {
-    let nd: usize=self.dim.len();
-    let mut ind: usize=0;
-    for itr in 0..nd
-    {
-      let mut prod: usize=1;
-      for jtr in (itr+1)..nd
-      {
-        prod*=self.dim[jtr];
-      }
-      ind+=prod*index[itr]
-    }
+    let ind: usize=index.iter()
+      .enumerate()
+      .fold(0,|acc,d| {
+        let itr: usize=d.0+1;
+        let prod: usize=self.dim[itr..].iter()
+        .fold(1,|acc,d| acc*d);
+        acc+prod*d.1
+      });
     &self.data[ind]
   }
 }
@@ -66,17 +63,14 @@ where T: Scalar
 {
   fn index_mut(&mut self, index: [usize;N]) -> &mut Self::Output
   {
-    let nd: usize=self.dim.len();
-    let mut ind: usize=0;
-    for itr in 0..nd
-    {
-      let mut prod: usize=1;
-      for jtr in (itr+1)..nd
-      {
-        prod*=self.dim[jtr];
-      }
-      ind+=prod*index[itr]
-    }
+    let ind: usize=index.iter()
+      .enumerate()
+      .fold(0,|acc,d| {
+        let itr: usize=d.0+1;
+        let prod: usize=self.dim[itr..].iter()
+        .fold(1,|acc,d| acc*d);
+        acc+prod*d.1
+      });
     &mut self.data[ind]
   }
 }
