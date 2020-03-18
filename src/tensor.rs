@@ -78,20 +78,20 @@ where T: Scalar
   }
 }
 
-// impl<T,const N: usize> Clone for Tensor<T,N>
-// where T: Scalar
-// {
-//   fn clone(&self) -> Tensor<T,N>
-//   {
-//     let mut t: Tensor<T,N>=Tensor::<T,N>::new(self.dim);
+impl<T,const N: usize> Clone for Tensor<T,N>
+where T: Scalar
+{
+  fn clone(&self) -> Tensor<T,N>
+  {
+    let mut t: Tensor<T,N>=Tensor::<T,N>::new(self.dim);
 
-//     for itr in 0..self.data.len()
-//     {
-//       t[itr]=self[itr];
-//     }
-//     t
-//   }
-// }
+    for itr in 0..self.data.len()
+    {
+      t.data[itr]=self.data[itr];
+    }
+    t
+  }
+}
 
 // impl<T> AddAssign for Tensor<T>
 // where T: Scalar
@@ -299,17 +299,17 @@ mod tensor_tests
   //   assert!(t2[2]==3.1+3.14);
   // }
 
-  // #[test]
-  // fn tensor_test_clone()
-  // {
-  //   let mut t1: Tensor<f64>=Tensor::<f64>::new(3);
-  //   t1[0]=1.3;
-  //   t1[1]=2.2;
-  //   t1[2]=3.1;
+  #[test]
+  fn tensor_test_clone()
+  {
+    let mut t1: Tensor<f64,1>=Tensor::<f64,1>::new([3]);
+    t1[[0]]=1.3;
+    t1[[1]]=2.2;
+    t1[[2]]=3.1;
 
-  //   let t2: Tensor<f64>=t1.clone();
-  //   assert!(t2[0]==1.3);
-  //   assert!(t2[1]==2.2);
-  //   assert!(t2[2]==3.1);
-  // }
+    let t2: Tensor<f64,1>=t1.clone();
+    assert!(t2[[0]]==1.3);
+    assert!(t2[[1]]==2.2);
+    assert!(t2[[2]]==3.1);
+  }
 }
