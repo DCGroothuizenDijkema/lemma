@@ -154,7 +154,7 @@ where T: Scalar
 {
   fn add_assign(&mut self, rhs: T)
   {
-    for this in self.data.iter_mut() { *this+=rhs.clone(); }
+    self.data.iter_mut().for_each(|this| *this+=rhs.clone());
   }
 }
 
@@ -163,7 +163,7 @@ where T: Scalar
 {
   fn add_assign(&mut self, rhs: &T)
   {
-    for this in self.data.iter_mut() { *this+=rhs.clone(); }
+    self.data.iter_mut().for_each(|this| *this+=rhs.clone());
   }
 }
 
