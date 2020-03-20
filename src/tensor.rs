@@ -162,15 +162,6 @@ where T: Scalar + AddAssign<U>, U: Operand
   }
 }
 
-// impl<T,U,const N: Idx> AddAssign<&U> for Tensor<T,N>
-// where T: Scalar + AddAssign<U>, U: Operand
-// {
-//   fn add_assign(&mut self, rhs: U)
-//   {
-//     self.data.iter_mut().for_each(|this| *this+=rhs.clone());
-//   }
-// }
-
 impl<T,const N: Idx> Add<T> for Tensor<T,N>
 where T: Scalar
 {
@@ -349,6 +340,8 @@ mod tensor_tests
     assert!(t1[[1,0]]==1.1+8.8+8.8);
     assert!(t1[[1,1]]==3.1);
     assert!(t1[[1,2]]==1.1+9.7+9.7);
+
+    t1+=t2;
   }
 
   #[test]
