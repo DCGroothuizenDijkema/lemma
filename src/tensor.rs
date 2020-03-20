@@ -47,6 +47,8 @@ impl<const N: Idx> Dimension<Dim<N>> for Dim<N>
 
 impl Operand for f32 {}
 impl Operand for f64 {}
+impl Operand for &f32 {}
+impl Operand for &f64 {}
 
 impl Scalar for f32 {}
 impl Scalar for f64 {}
@@ -151,23 +153,23 @@ where T: Scalar
   }
 }
 
-impl<T,const N: Idx> AddAssign<T> for Tensor<T,N>
-where T: Scalar
+impl<T,U,const N: Idx> AddAssign<U> for Tensor<T,N>
+where T: Scalar + AddAssign<U>, U: Operand
 {
-  fn add_assign(&mut self, rhs: T)
+  fn add_assign(&mut self, rhs: U)
   {
     self.data.iter_mut().for_each(|this| *this+=rhs.clone());
   }
 }
 
-impl<T,const N: Idx> AddAssign<&T> for Tensor<T,N>
-where T: Scalar
-{
-  fn add_assign(&mut self, rhs: &T)
-  {
-    self.data.iter_mut().for_each(|this| *this+=rhs.clone());
-  }
-}
+// impl<T,U,const N: Idx> AddAssign<&U> for Tensor<T,N>
+// where T: Scalar + AddAssign<U>, U: Operand
+// {
+//   fn add_assign(&mut self, rhs: U)
+//   {
+//     self.data.iter_mut().for_each(|this| *this+=rhs.clone());
+//   }
+// }
 
 impl<T,const N: Idx> Add<T> for Tensor<T,N>
 where T: Scalar
@@ -365,6 +367,11 @@ mod tensor_tests
     assert!(t[1]==1.618+s);
     assert!(t[2]==2.71+s);
     assert!(t[3]==1.414+s);
+    t+=&s;
+    assert!(t[0]==3.14+s+s);
+    assert!(t[1]==1.618+s+s);
+    assert!(t[2]==2.71+s+s);
+    assert!(t[3]==1.414+s+s);
   }
 
   #[test]
