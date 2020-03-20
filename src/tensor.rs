@@ -15,9 +15,8 @@ use std::ops::IndexMut;
 type Idx=usize;
 type Dim<const N: Idx>=[Idx;N];
 
-trait Scalar:
-  Clone + Default + AddAssign
-{}
+trait Operand: Clone + AddAssign {}
+trait Scalar: Operand + Default {}
 
 trait Dimension<D>
 {
@@ -31,23 +30,26 @@ impl<const N: Idx> Dimension<Dim<N>> for Dim<N>
   {
     ind.iter()
       .enumerate()
-      .fold(0,|acc,d| {
+      .fold(0,|sum,d| {
         let itr: usize=d.0+1;
         let prod: usize=self[itr..].iter()
-          .fold(1,|acc,d| acc*d);
-        acc+prod*d.1
+          .fold(1,|prod,d| prod*d);
+        sum+prod*d.1
       })
   }
 
   fn size(self) -> Idx
   {
     self.iter()
-      .fold(1,|acc,d| acc*d)
+      .fold(1,|prod,d| prod*d)
   }
 }
 
-impl Scalar for f64 {}
+impl Operand for f32 {}
+impl Operand for f64 {}
+
 impl Scalar for f32 {}
+impl Scalar for f64 {}
 
 struct Tensor<T: Scalar, const N: Idx>
 {
