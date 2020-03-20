@@ -18,14 +18,16 @@ type Dim<const N: Idx>=[Idx;N];
 trait Operand: Clone {}
 trait Scalar: Operand + Default + AddAssign {}
 
-trait Dimension<D>
+trait Dimension: Sized
 {
-  fn index(self, ind: D) -> Idx;
+  type D: Sized;
+  fn index(self, ind: Self::D) -> Idx;
   fn size(self) -> Idx;
 }
 
-impl<const N: Idx> Dimension<Dim<N>> for Dim<N>
+impl<const N: Idx> Dimension for Dim<N>
 {
+  type D=Self;
   fn index(self, ind: Dim<N>) -> Idx
   {
     ind.iter()
@@ -228,7 +230,7 @@ where T: Scalar
 #[cfg(test)]
 mod tensor_tests
 {
-  use super::{Tensor};
+  use super::*;
 
   #[test]
   fn tensor_test_new()
