@@ -15,8 +15,8 @@ use std::ops::IndexMut;
 type Idx=usize;
 type Dim<const N: Idx>=[Idx;N];
 
-trait Operand: Clone + AddAssign {}
-trait Scalar: Operand + Default {}
+trait Operand: Clone {}
+trait Scalar: Operand + Default + AddAssign {}
 
 trait Dimension<D>
 {
