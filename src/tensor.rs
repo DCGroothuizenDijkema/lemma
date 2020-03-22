@@ -231,26 +231,51 @@ where T: Scalar
 mod tensor_tests
 {
   use super::*;
+  use rstest::rstest;
 
-  #[test]
-  fn tensor_test_new()
-  {
-    let t: Tensor<f64,1>=Tensor::<f64,1>::new([5]);
-    assert!(t.dim==[5]);
-    assert!(t.data.len()==5);
-    for elem in t.data.iter()
-    {
-      assert!(elem==&0f64);
-    }
-
-    let t: Tensor<f32,2>=Tensor::<f32,2>::new([3,2]);
-    assert!(t.dim==[3,2]);
-    assert!(t.data.len()==6);
-    for elem in t.data.iter()
-    {
-      assert!(elem==&0f32);
-    }
+  macro_rules! tensor_test_new {
+    ($size:literal,$type:ty,$init:expr,$dim_tst:ident,$dim_attr:meta,$size_tst:ident,$size_attr:meta,$init_tst:ident,$init_attr:meta) => {
+      #[$dim_attr]
+      fn $dim_tst(dim: Dim<$size>)
+      {
+        let t: Tensor<$type,$size>=Tensor::<$type,$size>::new(dim);
+        assert!(t.dim==dim);
+      }
+      #[$size_attr]
+      fn $size_tst(dim: Dim<$size>, expected_data_len: usize)
+      {
+        let t: Tensor<$type,$size>=Tensor::<$type,$size>::new(dim);
+        assert!(t.data.len()==expected_data_len);
+      }
+      #[$init_attr]
+      fn $init_tst(dim: Dim<$size>)
+      {
+        let t: Tensor<$type,$size>=Tensor::<$type,$size>::new(dim);
+        for &elem in t.data.iter()
+        {
+          assert!(elem==$init);
+        }
+      }
+    };
   }
+
+  tensor_test_new!(1,f64,0f64
+    ,tensor_test_new_dim_1d,rstest(dim,case([2]),case([3]),case([4]))
+    ,tensor_test_new_size_1d,rstest(dim,expected_data_len,case([2],2),case([3],3),case([4],4))
+    ,tensor_test_new_init_1d,rstest(dim,case([4]),case([5]))
+  );
+
+  tensor_test_new!(2,f64,0f64
+    ,tensor_test_new_dim_2d,rstest(dim,case([2,2]),case([3,3]),case([4,4]))
+    ,tensor_test_new_size_2d,rstest(dim,expected_data_len,case([2,3],6),case([3,4],12),case([4,5],20))
+    ,tensor_test_new_init_2d,rstest(dim,case([7,3]),case([4,9]))
+  );
+
+  tensor_test_new!(3,f64,0f64
+    ,tensor_test_new_dim_3d,rstest(dim,case([2,4,6]),case([3,5,7]),case([1,1,1]))
+    ,tensor_test_new_size_3d,rstest(dim,expected_data_len,case([2,3,4],24),case([3,4,5],60),case([4,5,6],120))
+    ,tensor_test_new_init_3d,rstest(dim,case([7,3,5]),case([4,9,2]))
+  );
 
   #[test]
   fn tensor_test_index()
