@@ -3,6 +3,8 @@ name = "lemma"
 version = "0.1.0"
 authors = ["David Cornelis Groothuizen Dijkema <d.groothuizen.dijkema@gmail.com>"]
 edition = "2018"
+description = "A library for scientific computation in Rust "
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
